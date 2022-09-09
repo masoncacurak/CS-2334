@@ -6,8 +6,8 @@ public class Triangle {
 	private double sideB;
 	private double sideC;
 		
-	public final static String POLYGONSHAPE = "Triangle";
-	public final static double DEFAULT_SIDE = 1;
+	public static final String POLYGONSHAPE = "Triangle";
+	public static final double DEFAULT_SIDE = 1.0;
 	
 	final DecimalFormat df = new DecimalFormat("0.00");
 		
@@ -16,10 +16,9 @@ public class Triangle {
 		sideB = DEFAULT_SIDE;
 		sideC = DEFAULT_SIDE;
 	}
-	
+	//Good
 	public Triangle(double inputA, double inputB, double inputC) {	
-		if (!isTriangle(inputA, inputB, inputC)) 
-		{
+		if (!isTriangle(inputA, inputB, inputC)) {
 			sideA = DEFAULT_SIDE;
 			sideB = DEFAULT_SIDE;
 			sideC = DEFAULT_SIDE;
@@ -47,16 +46,18 @@ public class Triangle {
 	}
 	
 	public Triangle(Triangle tri) {
-		if (tri == null) {
-			sideA = DEFAULT_SIDE;
-			sideB = DEFAULT_SIDE;
-			sideC = DEFAULT_SIDE;
+		if (tri != null) {
+			if(tri.getSideA() + tri.getSideB() > tri.getSideC()) {
+			this.sideA = tri.getSideA();
+			this.sideB = tri.getSideB();
+			this.sideC = tri.getSideC();
 		}
 		else 
 		{
-			this.sideA = tri.sideA;
-			this.sideB = tri.sideB;
-			this.sideC = tri.sideC;
+			this.sideA = DEFAULT_SIDE;
+			this.sideB = DEFAULT_SIDE;
+			this.sideC = DEFAULT_SIDE;
+			}
 		}
 	}
 	
@@ -76,47 +77,41 @@ public class Triangle {
 		return new double[] {sideA, sideB, sideC};
 	}
 	
-	public boolean setSideA(double a) {
-		if (!isTriangle(a, this.sideB, this.sideC)) {
-			return false;
+	public boolean setSideA(double sideA) {
+		if (isTriangle(sideA, this.sideB, this.sideC)) {
+			this.sideA = sideA;
+			return true;
 		}
-		this.sideA = a;
-		return true;
+		return false;
 	}
 	
-	public boolean setSideB(double b) {
-		if (!isTriangle(b, this.sideA, this.sideC)) {
-			return false;
+	public boolean setSideB(double sideB) {
+		if (isTriangle(sideB, this.sideA, this.sideC)) {
+			this.sideB = sideB;
+			return true;
 		}
-		this.sideB = b;
-		return true;
+		return false;
 	}
 	
-	public boolean setSideC(double c) {
-		if (!isTriangle(c, this.sideA, this.sideB)) {
-			return false;
+	public boolean setSideC(double sideC) {
+		if (isTriangle(sideC, this.sideA, this.sideB)) {
+			this.sideC = sideC;
+			return true;
 		}
-		this.sideC = c;
-		return true;
+		return false;
 	}
 	
 	public boolean setSides(double[] sides) {
-		if (sides.length == 3) {
-			if (isTriangle(sides[0], sides[1], sides[2])) {
-				this.sideA = sides[0];
-				this.sideB = sides[1];
-				this.sideC = sides[2];
-				return true;
+		if (isTriangle(sides)) {
+			this.sideA = sides[0];
+			this.sideB = sides[1];
+			this.sideC = sides[2];
+			return true;
 			}
 			else 
 			{
-				return false;
-			}	
-		}
-		else 
-		{
 			return false;
-		}
+		}	
 	}
 	
 	public double getAngleA() {
@@ -149,7 +144,13 @@ public class Triangle {
 	}
 	//Helper method
 	public static double lawOfCosines(double a, double b, double c) {
-		return Math.acos((b * b + c * c - a * a) / (2.0 * b * c));
+		double sqrtA = Math.pow(a,  2);
+		double sqrtB = Math.pow(b,  2);
+		double sqrtC = Math.pow(c,  2);
+		
+		double answer = Math.acos((sqrtA + sqrtB - sqrtC) / (2 * a * b));
+		answer = (answer * 180) / Math.PI;
+		return answer;
 	}
 
 	public static boolean isTriangle(double[] sides) {
@@ -162,7 +163,8 @@ public class Triangle {
 	}
 	
 	public String toString() {
-		return (POLYGONSHAPE + "(" + df.format(sideA) + ", " + df.format(sideB) + ", " + df.format(sideC) + ")");
+		String s = "(%.4f, %.4f, %.4f)";
+		return POLYGONSHAPE + String.format(s, getSideA(), getSideB(), getSideC());
 	}
 }
 	
