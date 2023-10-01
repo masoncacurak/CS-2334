@@ -1,1 +1,1 @@
-# CS-2334: Discrete Structures
+# CS-2334: Programming Structures and Abstractions
